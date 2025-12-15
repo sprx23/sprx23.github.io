@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<title>Sprx23's Revision Status</title>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #040006;
+    color: #e6e6e6;
+    font-family: monospace;
+    overflow: hidden;
+}
+
+canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+    padding: 24px;
+}
+
+h1 {
+    margin: 0 0 16px 0;
+    font-size: 28px;
+    letter-spacing: 1px;
+}
+
+pre {
+    background: rgba(10, 0, 15, 0.75);
+    border: 1px solid #3a1a4a;
+    padding: 16px;
+    max-width: 900px;
+    white-space: pre-wrap;
+}
+</style>
+</head>
+
+<body>
+<canvas id="bg"></canvas>
+
+<div class="content">
+    <h1>Sprx23's Revision Status</h1>
+    <pre>
+Revision Of These Chapters Is Done
+------------------------------------------------
+14-12-2025 PHY/SL, PHY/MOP
+15-12-2025 PHY/NLM, CHM/PREODIC
+    </pre>
+</div>
+
+<script>
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+let w, h;
+function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
+
+/* ---------- PARTICLES ---------- */
+const particles = [];
+const P_COUNT = 150;
+
+function spawnParticle() {
+    return {
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: -(Math.random() * 0.4 + 0.1),
+        r: Math.random() * 1.6 + 0.4,
+        life: 0,
+        maxLife: Math.random() * 300 + 200,
+        alpha: 0
+    };
+}
+
+for (let i = 0; i < P_COUNT; i++) particles.push(spawnParticle());
+
+/* ---------- GRID (UPWARD ONLY) ---------- */
+let gridOffsetY = 0;
+const GRID_STEP = 80;
+const GRID_SPEED = 0.25;
+
+function drawGrid() {
+    ctx.strokeStyle = "rgba(140, 90, 180, 0.10)";
+    ctx.lineWidth = 1;
+
+    // vertical lines (static)
+    for (let x = 0; x < w; x += GRID_STEP) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+    }
+
+    // horizontal lines (move upward)
+    const offset = gridOffsetY % GRID_STEP;
+    for (let y = -offset; y < h; y += GRID_STEP) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+    }
+}
+
+/* ---------- MAIN LOOP ---------- */
+function tick() {
+    ctx.fillStyle = "rgba(4, 0, 6, 0.35)";
+    ctx.fillRect(0, 0, w, h);
+
+    drawGrid();
+    gridOffsetY += GRID_SPEED;
+
+    for (const p of particles) {
+        p.life++;
+
+        if (p.life < 40) p.alpha = p.life / 40;
+        else if (p.life > p.maxLife - 40)
+            p.alpha = (p.maxLife - p.life) / 40;
+        else p.alpha = 1;
+
+        p.x += p.vx + (Math.random() - 0.5) * 0.1;
+        p.y += p.vy;
+
+        ctx.fillStyle = `rgba(180, 80, 255, ${p.alpha * 0.85})`;
+        ctx.fillRect(p.x, p.y, p.r + 0.5, p.r + 0.5);
+
+        if (p.life >= p.maxLife || p.y < -10) {
+            Object.assign(p, spawnParticle());
+        }
+    }
+
+    requestAnimationFrame(tick);
+}
+
+tick();
+</script>
+</body>
+</html>
