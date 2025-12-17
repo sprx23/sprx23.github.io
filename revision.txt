@@ -1,0 +1,21 @@
+Revision Of These Chapters Is Done
+---------------------------------------------------
+14-12-2025 PHY/SL, PHY/MOP
+15-12-2025 PHY/NLM, CHM/PREODIC
+16-12-2025 PHY/WEP, CHM/CBONDING
+17-12-2025 PHY/ATOMS, PHY/NUCLIE, PHY/CIRMOT, CHM/ATOMIC
+
+Class 12th (Done)
+---------------------------------------------------
+PHY/ELECTRIC, PHY/ELECTRO, PHY/POTENT, PHY/MAG, PHY/MMAT, PHY/EMI, PHY/WAV, PHY/AC, PHY/GEOOP
+CHM/SOL, CHM/ELECTRO, CHM/CKEN, CHM/OC-all, CHM/BM, CHM/COORD, CHM/DFBLOCK
+MAT/DET, MAT/LCD
+
+Class 12th (Needs to be Done/More Practice)
+---------------------------------------------------
+LP = Low Priority, NP = Normal Priority, ANP = Above Normal Priority
+MAT/II MAT/DI (LP)
+MAT/AOD, MAT/MOD, MAT/DE (NP)
+MAT/PROB, MAT/3D, MAT/MAT, MAT/VEC (ANP)
+PHY/WAVOP, PHY/SEMI, PHY/DUAL (NP)
+CHM/PBLOCK (LP)

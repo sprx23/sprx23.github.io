@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	
+	<title>Sprx23's Revision Status</title>
+
+	<style>
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			width: 100%;
+			height: 100%;
+			background: #040006;
+			color: #e6e6e6;
+			font-family: monospace;
+		}
+
+		.content {
+			position: relative;
+			z-index: 1;
+			padding: 24px;
+			height: 100%;
+			overflow-y: auto;
+		}
+
+		canvas {
+			position: fixed;
+			inset: 0;
+			z-index: 0;
+		}
+
+		h1 {
+			margin: 0 0 16px 0;
+			font-size: 28px;
+			letter-spacing: 1px;
+		}
+
+		pre {
+			background: rgba(10, 0, 15, 0.75);
+			border: 1px solid #3a1a4a;
+			padding: 16px;
+			max-width: 900px;
+			white-space: pre-wrap;
+			margin-bottom: 100px;
+		}
+	</style>
+</head>
+
+<body>
+	<canvas id="bg"></canvas>
+
+	<div class="content">
+		<h1>Sprx23's Revision Status</h1>
+		<pre id="revision_text"></pre>
+	</div>
+
+	<script>
+		(async () => {
+			const rep = await fetch("revision.txt")
+			const txt = await rep.text()
+			document.getElementById("revision_txt").textContent = txt
+		})();
+
+		const canvas = document.getElementById("bg");
+		const ctx = canvas.getContext("2d");
+
+		let w, h;
+		function resize() {
+			w = canvas.width = window.innerWidth;
+			h = canvas.height = window.innerHeight;
+		}
+		window.addEventListener("resize", resize);
+		resize();
+
+		/* ---------- PARTICLES (PURPLE VARIANTS + GREEN OUTLIERS) ---------- */
+		const particles = [];
+		const P_COUNT = 160;
+
+		function randomColor() {
+			// ~85% purple variants, ~15% green outliers
+			if (Math.random() < 0.15) {
+				return { r: 120, g: 255, b: 140 }; // End-portal green
+			}
+			const base = 160 + Math.random() * 60;
+			return {
+				r: base,
+				g: 60 + Math.random() * 40,
+				b: 200 + Math.random() * 55
+			};
+		}
+
+		function spawnParticle() {
+			return {
+				x: Math.random() * w,
+				y: Math.random() * h,
+				vx: (Math.random() - 0.5) * 0.15,
+				vy: -(Math.random() * 0.4 + 0.1),
+				r: Math.random() * 1.8 + 0.4,
+				life: 0,
+				maxLife: Math.random() * 300 + 200,
+				alpha: 0,
+				color: randomColor()
+			};
+		}
+
+		for (let i = 0; i < P_COUNT; i++) particles.push(spawnParticle());
+
+		/* ---------- GRID (UPWARD + SLOW PULSE) ---------- */
+		let gridOffsetY = 0;
+		let pulseT = 0;
+
+		const GRID_STEP = 80;
+		const GRID_SPEED = 0.25;
+
+		function drawGrid() {
+			// slow sine pulse
+			const pulse = 0.08 + Math.sin(pulseT) * 0.05;
+			ctx.strokeStyle = `rgba(160, 100, 200, ${pulse})`;
+			ctx.lineWidth = 1;
+
+			// vertical lines (static)
+			for (let x = 0; x < w; x += GRID_STEP) {
+				ctx.beginPath();
+				ctx.moveTo(x, 0);
+				ctx.lineTo(x, h);
+				ctx.stroke();
+			}
+
+			// horizontal lines (moving up)
+			const offset = gridOffsetY % GRID_STEP;
+			for (let y = -offset; y < h; y += GRID_STEP) {
+				ctx.beginPath();
+				ctx.moveTo(0, y);
+				ctx.lineTo(w, y);
+				ctx.stroke();
+			}
+		}
+
+		/* ---------- MAIN LOOP ---------- */
+		function tick() {
+			ctx.fillStyle = "rgba(4, 0, 6, 0.35)";
+			ctx.fillRect(0, 0, w, h);
+
+			drawGrid();
+			gridOffsetY += GRID_SPEED;
+			pulseT += 0.01; // slow pulse rate
+
+			for (const p of particles) {
+				p.life++;
+
+				if (p.life < 40) p.alpha = p.life / 40;
+				else if (p.life > p.maxLife - 40)
+					p.alpha = (p.maxLife - p.life) / 40;
+				else p.alpha = 1;
+
+				p.x += p.vx + (Math.random() - 0.5) * 0.1;
+				p.y += p.vy;
+
+				ctx.fillStyle = `rgba(${p.color.r}, ${p.color.g}, ${p.color.b}, ${p.alpha * 0.85})`;
+				ctx.fillRect(p.x, p.y, p.r + 0.6, p.r + 0.6);
+
+				if (p.life >= p.maxLife || p.y < -10) {
+					Object.assign(p, spawnParticle());
+				}
+			}
+
+			requestAnimationFrame(tick);
+		}
+
+		tick();
+	</script>
+</body>
+
+</html>

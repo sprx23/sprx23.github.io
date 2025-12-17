@@ -1,302 +1,325 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sprx23 - Home</title>
-  <style>
-    /* Reset + layout */
-    :root {
-      --content-width: 1100px;
-      --accent: #ffffffcc;
-      --bg: #050814;
-      --card-bg: rgba(255,255,255,0.03);
-    }
-    html,body{
-      height:100%;
-      margin:0;
-      font-family: Inter, Roboto, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial;
-      background: var(--bg);
-      color: var(--accent);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-    }
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width,initial-scale=1" />
+	<title>Sprx23 - Home</title>
+	<style>
+		/* Reset + layout */
+		:root {
+			--content-width: 1100px;
+			--accent: #ffffffcc;
+			--bg: #050814;
+			--card-bg: rgba(255, 255, 255, 0.03);
+		}
 
-    /* Canvas fills viewport, sits behind content */
-    canvas#star-bg{
-      position:fixed;
-      inset:0;
-      width:100%;
-      height:100%;
-      display:block;
-      z-index:0;
-      pointer-events:none; /* so content is interactive */
-    }
+		html,
+		body {
+			height: 100%;
+			margin: 0;
+			font-family: Inter, Roboto, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial;
+			background: var(--bg);
+			color: var(--accent);
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+		}
 
-    /* Page content above the canvas */
-    .page {
-      position:relative;
-      z-index:1;
-      min-height:100%;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      padding:48px 20px;
-      box-sizing:border-box;
-      backdrop-filter: none;
-    }
+		/* Canvas fills viewport, sits behind content */
+		canvas#star-bg {
+			position: fixed;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			display: block;
+			z-index: 0;
+			pointer-events: none;
+			/* so content is interactive */
+		}
 
-    header {
-      width:100%;
-      max-width:var(--content-width);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      margin-bottom:40px;
-    }
-    header h1{
-      font-size:1.6rem;
-      margin:0;
-      letter-spacing:0.4px;
-    }
-    header nav{
-      font-size:0.95rem;
-      opacity:0.9;
-    }
-    header nav a{
-      color:var(--accent);
-      text-decoration:none;
-      margin-left:18px;
-      opacity:0.85;
-    }
-    header nav a:hover{ opacity:1; text-decoration:underline; }
+		/* Page content above the canvas */
+		.page {
+			position: relative;
+			z-index: 1;
+			min-height: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 48px 20px;
+			box-sizing: border-box;
+			backdrop-filter: none;
+		}
 
-    .container {
-      width:100%;
-      max-width:var(--content-width);
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap:20px;
-      align-items:start;
-    }
+		header {
+			width: 100%;
+			max-width: var(--content-width);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 16px;
+			margin-bottom: 40px;
+		}
 
-    .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.04);
-      padding:20px;
-      border-radius:10px;
-      box-shadow: 0 6px 20px rgba(2,6,23,0.45);
-      min-height:160px;
-      backdrop-filter: blur(4px);
-    }
+		header h1 {
+			font-size: 1.6rem;
+			margin: 0;
+			letter-spacing: 0.4px;
+		}
 
-    .card h2{
-      margin:0 0 10px 0;
-      font-size:1.05rem;
-      color:#fff;
-      opacity:0.95;
-    }
-    .card p{
-      margin:0;
-      color:rgba(255,255,255,0.82);
-      line-height:1.5;
-      font-size:0.95rem;
-      opacity:0.9;
-    }
+		header nav {
+			font-size: 0.95rem;
+			opacity: 0.9;
+		}
 
-    /* Responsive */
-    @media (max-width:900px){
-      .container { grid-template-columns: 1fr; }
-      header { flex-direction:column; align-items:flex-start; gap:12px; }
-    }
-  </style>
+		header nav a {
+			color: var(--accent);
+			text-decoration: none;
+			margin-left: 18px;
+			opacity: 0.85;
+		}
+
+		header nav a:hover {
+			opacity: 1;
+			text-decoration: underline;
+		}
+
+		.container {
+			width: 100%;
+			max-width: var(--content-width);
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			gap: 20px;
+			align-items: start;
+		}
+
+		.card {
+			background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+			border: 1px solid rgba(255, 255, 255, 0.04);
+			padding: 20px;
+			border-radius: 10px;
+			box-shadow: 0 6px 20px rgba(2, 6, 23, 0.45);
+			min-height: 160px;
+			backdrop-filter: blur(4px);
+		}
+
+		.card h2 {
+			margin: 0 0 10px 0;
+			font-size: 1.05rem;
+			color: #fff;
+			opacity: 0.95;
+		}
+
+		.card p {
+			margin: 0;
+			color: rgba(255, 255, 255, 0.82);
+			line-height: 1.5;
+			font-size: 0.95rem;
+			opacity: 0.9;
+		}
+
+		/* Responsive */
+		@media (max-width:900px) {
+			.container {
+				grid-template-columns: 1fr;
+			}
+
+			header {
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 12px;
+			}
+		}
+	</style>
 </head>
+
 <body>
-  <canvas id="star-bg" aria-hidden="true"></canvas>
+	<canvas id="star-bg" aria-hidden="true"></canvas>
 
-  <div class="page" role="document">
-    <header>
-      <h1>Sprx23's Personal Website :)</h1>
-      <nav aria-label="Primary">
-        <a href="/sprx23website/index.html">Home</a>
-        <!--<a href="#">About</a>
+	<div class="page" role="document">
+		<header>
+			<h1>Sprx23's Personal Website :)</h1>
+			<nav aria-label="Primary">
+				<a href="/sprx23website/index.html">Home</a>
+				<!--<a href="#">About</a>
         <a href="#">Contact</a>-->
-      </nav>
-    </header>
+			</nav>
+		</header>
 
-    <main class="container" role="main">
-      <section class="card" aria-labelledby="col1-title">
-        <h2 id="col1-title">School Projects</h2>
-        <a href="./school_stuff/ip_projects.html">IP Projects</a>
-      </section>
+		<main class="container" role="main">
+			<section class="card" aria-labelledby="col1-title">
+				<h2 id="col1-title">School Projects</h2>
+				<a href="./school_stuff/ip_projects.html">IP Projects</a>
+			</section>
 
-      <section class="card" aria-labelledby="col2-title">
-        <h2 id="col2-title">Column Two</h2>
-        <p>Placeholder text. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
-      </section>
+			<section class="card" aria-labelledby="col2-title">
+				<h2 id="col2-title">Column Two</h2>
+				<p>Placeholder text. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+					veniam, quis nostrud exercitation ullamco laboris.</p>
+			</section>
 
-      <section class="card" aria-labelledby="col3-title">
-        <h2 id="col3-title">Column Three</h2>
-        <p>Placeholder text. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
-      </section>
-    </main>
-  </div>
+			<section class="card" aria-labelledby="col3-title">
+				<h2 id="col3-title">Column Three</h2>
+				<p>Placeholder text. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+					fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+			</section>
+		</main>
+	</div>
 
-  <script>
-    /* Starry background with stars of various sizes and speeds rising up */
-    (function () {
-      const canvas = document.getElementById('star-bg');
-      const ctx = canvas.getContext('2d', { alpha: true });
+	<script>
+		/* Starry background with stars of various sizes and speeds rising up */
+		(function () {
+			const canvas = document.getElementById('star-bg');
+			const ctx = canvas.getContext('2d', { alpha: true });
 
-      let DPR = Math.max(1, window.devicePixelRatio || 1);
+			let DPR = Math.max(1, window.devicePixelRatio || 1);
 
-      function resize() {
-        DPR = Math.max(1, window.devicePixelRatio || 1);
-        canvas.width = Math.floor(window.innerWidth * DPR);
-        canvas.height = Math.floor(window.innerHeight * DPR);
-        canvas.style.width = window.innerWidth + 'px';
-        canvas.style.height = window.innerHeight + 'px';
-        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      }
-      window.addEventListener('resize', resize, { passive: true });
-      resize();
+			function resize() {
+				DPR = Math.max(1, window.devicePixelRatio || 1);
+				canvas.width = Math.floor(window.innerWidth * DPR);
+				canvas.height = Math.floor(window.innerHeight * DPR);
+				canvas.style.width = window.innerWidth + 'px';
+				canvas.style.height = window.innerHeight + 'px';
+				ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+			}
+			window.addEventListener('resize', resize, { passive: true });
+			resize();
 
-      const STAR_COUNT = Math.round((window.innerWidth * window.innerHeight) / 3500); // density tweak
-      const stars = [];
+			const STAR_COUNT = Math.round((window.innerWidth * window.innerHeight) / 3500); // density tweak
+			const stars = [];
 
-      function rand(min, max) {
-        return Math.random() * (max - min) + min;
-      }
+			function rand(min, max) {
+				return Math.random() * (max - min) + min;
+			}
 
-      // Pre-generate a small set of radial gradients (cached canvases) for performance
-      const gradientCache = {};
-      function makeStarSprite(size) {
-        const key = Math.round(size);
-        if (gradientCache[key]) return gradientCache[key];
-        const s = Math.max(2, key);
-        const c = document.createElement('canvas');
-        c.width = s * 2;
-        c.height = s * 2;
-        const g = c.getContext('2d');
-        const cx = s;
-        const cy = s;
-        const rad = s;
-        const grad = g.createRadialGradient(cx, cy, 0, cx, cy, rad);
-        grad.addColorStop(0, 'rgba(255,255,255,1)');
-        grad.addColorStop(0.2, 'rgba(255,255,255,0.9)');
-        grad.addColorStop(0.45, 'rgba(180,200,255,0.6)');
-        grad.addColorStop(1, 'rgba(100,120,160,0)');
-        g.fillStyle = grad;
-        g.beginPath();
-        g.arc(cx, cy, rad, 0, Math.PI * 2);
-        g.fill();
-        gradientCache[key] = c;
-        return c;
-      }
+			// Pre-generate a small set of radial gradients (cached canvases) for performance
+			const gradientCache = {};
+			function makeStarSprite(size) {
+				const key = Math.round(size);
+				if (gradientCache[key]) return gradientCache[key];
+				const s = Math.max(2, key);
+				const c = document.createElement('canvas');
+				c.width = s * 2;
+				c.height = s * 2;
+				const g = c.getContext('2d');
+				const cx = s;
+				const cy = s;
+				const rad = s;
+				const grad = g.createRadialGradient(cx, cy, 0, cx, cy, rad);
+				grad.addColorStop(0, 'rgba(255,255,255,1)');
+				grad.addColorStop(0.2, 'rgba(255,255,255,0.9)');
+				grad.addColorStop(0.45, 'rgba(180,200,255,0.6)');
+				grad.addColorStop(1, 'rgba(100,120,160,0)');
+				g.fillStyle = grad;
+				g.beginPath();
+				g.arc(cx, cy, rad, 0, Math.PI * 2);
+				g.fill();
+				gradientCache[key] = c;
+				return c;
+			}
 
-      // Create stars
-      for (let i = 0; i < STAR_COUNT; i++) {
-        const size = rand(0.7, 3.6); // visual size in CSS px
-        // speed proportional to size, but with variation
-        const baseSpeed = 0.2 + size * 0.75; // px per frame at 60fps approximation
-        const speed = baseSpeed * rand(0.6, 1.6);
-        stars.push({
-          x: rand(0, window.innerWidth),
-          y: rand(0, window.innerHeight),
-          size,
-          speed,
-          twinkle: Math.random() * Math.PI * 2,
-          twinkleSpeed: rand(0.002, 0.012),
-          sprite: makeStarSprite(size * (DPR < 2 ? 1 : 1.2))
-        });
-      }
+			// Create stars
+			for (let i = 0; i < STAR_COUNT; i++) {
+				const size = rand(0.7, 3.6); // visual size in CSS px
+				// speed proportional to size, but with variation
+				const baseSpeed = 0.2 + size * 0.75; // px per frame at 60fps approximation
+				const speed = baseSpeed * rand(0.6, 1.6);
+				stars.push({
+					x: rand(0, window.innerWidth),
+					y: rand(0, window.innerHeight),
+					size,
+					speed,
+					twinkle: Math.random() * Math.PI * 2,
+					twinkleSpeed: rand(0.002, 0.012),
+					sprite: makeStarSprite(size * (DPR < 2 ? 1 : 1.2))
+				});
+			}
 
-      let last = performance.now();
-      let fpsRatio = 1;
+			let last = performance.now();
+			let fpsRatio = 1;
 
-      function step(now) {
-        const dt = Math.min(40, now - last); // cap large deltas
-        last = now;
-        fpsRatio = dt / (1000 / 60);
+			function step(now) {
+				const dt = Math.min(40, now - last); // cap large deltas
+				last = now;
+				fpsRatio = dt / (1000 / 60);
 
-        // Clear with a subtle gradient
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // draw faint background gradient for depth
-        const bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        bgGrad.addColorStop(0, 'rgba(4,8,20,0.0)');
-        bgGrad.addColorStop(1, 'rgba(2,4,10,0.18)');
-        ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, canvas.width / DPR, canvas.height / DPR);
+				// Clear with a subtle gradient
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				// draw faint background gradient for depth
+				const bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+				bgGrad.addColorStop(0, 'rgba(4,8,20,0.0)');
+				bgGrad.addColorStop(1, 'rgba(2,4,10,0.18)');
+				ctx.fillStyle = bgGrad;
+				ctx.fillRect(0, 0, canvas.width / DPR, canvas.height / DPR);
 
-        for (let i = 0; i < stars.length; i++) {
-          const s = stars[i];
+				for (let i = 0; i < stars.length; i++) {
+					const s = stars[i];
 
-          // update vertical position (rising up)
-          s.y -= s.speed * fpsRatio;
-          // small horizontal drift
-          s.x += Math.sin(s.y * 0.01 + s.x * 0.005) * 0.15 * fpsRatio;
+					// update vertical position (rising up)
+					s.y -= s.speed * fpsRatio;
+					// small horizontal drift
+					s.x += Math.sin(s.y * 0.01 + s.x * 0.005) * 0.15 * fpsRatio;
 
-          // twinkle (modulate global alpha)
-          s.twinkle += s.twinkleSpeed * fpsRatio;
-          const alpha = 0.6 + 0.4 * Math.sin(s.twinkle);
+					// twinkle (modulate global alpha)
+					s.twinkle += s.twinkleSpeed * fpsRatio;
+					const alpha = 0.6 + 0.4 * Math.sin(s.twinkle);
 
-          // draw sprite centered
-          const sprite = s.sprite;
-          const drawX = s.x - sprite.width / (2 * DPR);
-          const drawY = s.y - sprite.height / (2 * DPR);
+					// draw sprite centered
+					const sprite = s.sprite;
+					const drawX = s.x - sprite.width / (2 * DPR);
+					const drawY = s.y - sprite.height / (2 * DPR);
 
-          ctx.globalAlpha = Math.max(0.08, Math.min(1, alpha));
-          ctx.drawImage(sprite, drawX, drawY, sprite.width / DPR, sprite.height / DPR);
-          ctx.globalAlpha = 1;
+					ctx.globalAlpha = Math.max(0.08, Math.min(1, alpha));
+					ctx.drawImage(sprite, drawX, drawY, sprite.width / DPR, sprite.height / DPR);
+					ctx.globalAlpha = 1;
 
-          // recycle when out of top bounds
-          if (s.y < -10) {
-            s.y = window.innerHeight + rand(8, 120);
-            s.x = rand(0, window.innerWidth);
-            s.size = rand(0.7, 3.6);
-            s.speed = (0.2 + s.size * 0.75) * rand(0.6, 1.6);
-            s.twinkle = Math.random() * Math.PI * 2;
-          }
-        }
+					// recycle when out of top bounds
+					if (s.y < -10) {
+						s.y = window.innerHeight + rand(8, 120);
+						s.x = rand(0, window.innerWidth);
+						s.size = rand(0.7, 3.6);
+						s.speed = (0.2 + s.size * 0.75) * rand(0.6, 1.6);
+						s.twinkle = Math.random() * Math.PI * 2;
+					}
+				}
 
-        requestAnimationFrame(step);
-      }
+				requestAnimationFrame(step);
+			}
 
-      // handle dynamic resizing: regenerate stars density if big change
-      let prevArea = window.innerWidth * window.innerHeight;
-      function maybeRegenerate() {
-        const area = window.innerWidth * window.innerHeight;
-        const ratio = area / prevArea;
-        if (ratio > 1.6 || ratio < 0.6) {
-          // large change -> recreate stars roughly same density
-          stars.length = 0;
-          const newCount = Math.round((window.innerWidth * window.innerHeight) / 3500);
-          for (let i = 0; i < newCount; i++) {
-            const size = rand(0.7, 3.6);
-            const speed = (0.2 + size * 0.75) * rand(0.6, 1.6);
-            stars.push({
-              x: rand(0, window.innerWidth),
-              y: rand(0, window.innerHeight),
-              size,
-              speed,
-              twinkle: Math.random() * Math.PI * 2,
-              twinkleSpeed: rand(0.002, 0.012),
-              sprite: makeStarSprite(size * (DPR < 2 ? 1 : 1.2))
-            });
-          }
-          prevArea = area;
-        }
-      }
+			// handle dynamic resizing: regenerate stars density if big change
+			let prevArea = window.innerWidth * window.innerHeight;
+			function maybeRegenerate() {
+				const area = window.innerWidth * window.innerHeight;
+				const ratio = area / prevArea;
+				if (ratio > 1.6 || ratio < 0.6) {
+					// large change -> recreate stars roughly same density
+					stars.length = 0;
+					const newCount = Math.round((window.innerWidth * window.innerHeight) / 3500);
+					for (let i = 0; i < newCount; i++) {
+						const size = rand(0.7, 3.6);
+						const speed = (0.2 + size * 0.75) * rand(0.6, 1.6);
+						stars.push({
+							x: rand(0, window.innerWidth),
+							y: rand(0, window.innerHeight),
+							size,
+							speed,
+							twinkle: Math.random() * Math.PI * 2,
+							twinkleSpeed: rand(0.002, 0.012),
+							sprite: makeStarSprite(size * (DPR < 2 ? 1 : 1.2))
+						});
+					}
+					prevArea = area;
+				}
+			}
 
-      window.addEventListener('resize', () => {
-        resize();
-        maybeRegenerate();
-      }, { passive: true });
+			window.addEventListener('resize', () => {
+				resize();
+				maybeRegenerate();
+			}, { passive: true });
 
-      // Start animation
-      requestAnimationFrame(step);
-    })();
-  </script>
+			// Start animation
+			requestAnimationFrame(step);
+		})();
+	</script>
 </body>
+
 </html>
