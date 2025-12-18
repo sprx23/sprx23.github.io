@@ -4,6 +4,7 @@ Revision Of These Chapters Is Done
 15-12-2025 PHY/NLM, CHM/PREODIC
 16-12-2025 PHY/WEP, CHM/CBONDING
 17-12-2025 PHY/ATOMS, PHY/NUCLIE, PHY/CIRMOT, CHM/ATOMIC
+18-12-2025 PHY/WAVOP MAT/PROB
 
 Class 12th (Done)
 ---------------------------------------------------
