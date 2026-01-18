@@ -42,7 +42,16 @@
     <button class="copy-btn" onclick="copyCode()">Copy</button>
 
     <!-- EMPTY pre for storing Python code -->
-    <pre><code id="python-code" class="language-python">
+    <pre><code id="python-code" class="language-python"></code></pre>
+</div>
+
+<!-- Prism.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+<script>
+    // Example of dynamically inserting code later:
+    const code = `
 import sqlite3
 import pygame
 import itertools
@@ -267,25 +276,16 @@ elif user_choice.startswith("load="):
     world_name = user_choice[5:]
     load_world()
     simulation()
-pygame.quit()
-</code></pre>
-</div>
+pygame.quit()    
+`;
+document.getElementById("python-code").textContent = code
+    Prism.highlightAll();
 
-<!-- Prism.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-
-<script>
     function copyCode() {
-        const code = document.getElementById("python-code").innerText;
         navigator.clipboard.writeText(code).then(() => {
             alert("Code copied!");
         });
     }
-
-    // Example of dynamically inserting code later:
-    // document.getElementById("python-code").textContent = "print('Hello, world!')";
-    // Prism.highlightAll();
 </script>
 
 </body>
