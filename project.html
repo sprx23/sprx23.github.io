@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Python Code Block</title>
+
+    <!-- Prism.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet"/>
+
+    <style>
+        .code-container {
+            position: relative;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 6px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            background-color: #444;
+            color: #fff;
+        }
+
+        .copy-btn:hover {
+            background-color: #666;
+        }
+
+        pre {
+            padding-top: 40px; /* space for button */
+        }
+    </style>
+</head>
+<body>
+
+<div class="code-container">
+    <button class="copy-btn" onclick="copyCode()">Copy</button>
+
+    <!-- EMPTY pre for storing Python code -->
+    <pre><code id="python-code" class="language-python">
+import sqlite3import pygameimport itertoolsimport timepygame.init()screen = pygame.display.set_mode((900, 600))clock = pygame.time.Clock()conn = sqlite3.connect("simulation_saves.db")cur = conn.cursor()cur.execute("""CREATE TABLE IF NOT EXISTS master_table (    world_name TEXT,    k REAL,    viewport_x INTEGER,    viewport_y INTEGER,    paused INTEGER);""")particles = [] # List of All Particlesparticles_couple = [] # All combinations of two particles taken at a timek = 10**5viewport_x = 0viewport_y = 0world_name = Nonepaused = Falsedragging = Falsedelta_t = 0coord_sys = lambda x, y: (int(x + viewport_x), int(screen.get_height() - y + viewport_y)) # simulation coordinates to screen coordinatesanti_coord_sys = lambda sx, sy: (int(sx - viewport_x), int(screen.get_height() - sy + viewport_y)) # screen coordinates to simulation coordinatesclass Particle:    def __init__(self, x, y, vx = 0, vy = 0, charge = 1, mass = 1):        self.pos = pygame.Vector2(x, y)        self.vel = pygame.Vector2(vx, vy)        self.charge = charge        self.mass = mass        self.force = pygame.Vector2(0, 0)    def draw_and_update(self, delta_t):        cx, cy = coord_sys(self.pos.x, self.pos.y)        pygame.draw.circle(screen, (244, 54, 54) if self.charge > 0 else (54, 54, 244), (cx, cy), 20)        pygame.draw.circle(screen, (0, 0, 0), (cx, cy), 20, 2)        pygame.draw.line(screen, (0,0,0), (cx - 8, cy), (cx + 8, cy), 2)        if self.charge > 0:            pygame.draw.line(screen, (0,0,0), (cx, cy - 8), (cx, cy + 8), 2) # Make minus plus        self.vel += (self.force / self.mass) * delta_t # F = ma & v = u + a * dt => v = u + (F / m) * dt        self.pos += self.vel * delta_t # dx / dt = v => dx = v * dt        self.force.update(0, 0) # Reset force for next iterdef save_world():    cur.execute(f'DROP TABLE IF EXISTS "world_{world_name}";')    cur.execute(f"""    CREATE TABLE "world_{world_name}" (        x REAL,        y REAL,        vx REAL,        vy REAL,        charge REAL,        mass REAL    );""")    cur.execute("DELETE FROM master_table WHERE world_name = ?;", (world_name,))    cur.execute("INSERT INTO master_table VALUES (?, ?, ?, ?, ?);", (world_name, k, viewport_x, viewport_y, 1 if paused else 0))    data = [(p.pos.x, p.pos.y, p.vel.x, p.vel.y, p.charge, p.mass) for p in particles]    cur.executemany(f'INSERT INTO "world_{world_name}" VALUES (?, ?, ?, ?, ?, ?);', data)    conn.commit()def load_world():    global viewport_x, viewport_y, k, paused    data_tuple = cur.execute("SELECT viewport_x, viewport_y, k, paused FROM master_table WHERE world_name = ?;", (world_name,)).fetchone()    viewport_x, viewport_y = data_tuple[0], data_tuple[1]    k = data_tuple[2]    paused = data_tuple[3] == 1    for p in cur.execute(f"SELECT x, y, vx, vy, charge, mass FROM world_{world_name}"):        particles.append(Particle(p[0], p[1], p[2], p[3], p[4], p[5]))def main_menu():    fontL = pygame.font.SysFont("comicsansms", 56)    fontS = pygame.font.SysFont("comicsansms", 28)    pygame.display.set_caption("Charged Particle Simulator: Main Menu")    title = fontL.render("Charged Particle Simulator", True, (255, 255, 255))    while True:        screen.fill((50, 34, 156))        screen.blit(title, (20, 20))        # Fetch world names        worlds = [row[0] for row in cur.execute("SELECT world_name FROM master_table;")]        buttons = []        y = 120        for w in worlds:            text = fontS.render(w, True, (255, 255, 0))            rect = text.get_rect(topleft=(50, y))            buttons.append((rect, ("load", w)))            screen.blit(text, rect)            y += fontS.get_height() + 10        # Create new and quit buttons        create_txt = fontS.render("[Create New World]", True, (0, 255, 0))        quit_txt = fontS.render("[Quit]", True, (255, 0, 0))        create_rect = create_txt.get_rect(topleft=(50, y))        y += fontS.get_height() + 10        quit_rect = quit_txt.get_rect(topleft=(50, y))        buttons += [(create_rect, ("create", None)), (quit_rect, ("quit", None))]        screen.blit(create_txt, create_rect)        screen.blit(quit_txt, quit_rect)        pygame.display.flip()        for event in pygame.event.get():            if event.type == pygame.QUIT:                return "quit"            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:                for rect, action in buttons:                    if rect.collidepoint(event.pos):                        typ, arg = action                        if typ == "quit":                            return "quit"                        if typ == "create":                            return "create"                        if typ == "load":                            return "load=" + arg        clock.tick(60)def create_world_screen():    pygame.display.set_caption("Charged Particle Simulator: Create World")    font = pygame.font.SysFont("comicsansms", 36)    input_name = ""    enter_rect = pygame.Rect(280, 160, 120, 50)    while True:        screen.fill((50, 34, 156))        screen.blit(font.render("Enter World Name:", True, (255, 255, 255)), (50, 80))        pygame.draw.rect(screen, (255, 255, 255), (400, 85, 300, 50), 2, 9)        screen.blit(font.render(input_name, True, (255, 255, 255)), (410, 85))        pygame.draw.rect(screen, (25, 176, 60), enter_rect, 0, 9)        screen.blit(font.render("Enter", True, (255, 255, 255)), (enter_rect.x + 5, enter_rect.y + 5))        pygame.display.flip()        for e in pygame.event.get():            if e.type == pygame.QUIT:                return False            if e.type == pygame.MOUSEBUTTONDOWN and enter_rect.collidepoint(e.pos):                if input_name.strip():                    return input_name.strip()            if e.type == pygame.KEYDOWN:                if e.key == pygame.K_BACKSPACE:                    input_name = input_name[:-1]                elif e.unicode.isprintable() and len(input_name) < 20:                    input_name += e.unicode        clock.tick(60)def simulation():    pygame.display.set_caption("Charged Particle Simulator: " + world_name)    global particles_couple, dragging, viewport_x, viewport_y, delta_t, k, paused    particles_couple = list(itertools.combinations(particles, 2))    lastMouseDown = None    message = "Press K to set constant k, Space to Pause/Resume, S to save, D to delete all particles"    typed = ""    font = pygame.font.SysFont("comicsansms", 24)    while True:        screen.fill((50, 34, 156))        for (p1, p2) in particles_couple:            if (p1.pos - p2.pos).magnitude() < 0.1: continue # Avoids division by zero or enormous amounts of forces            f12 = k * p1.charge * p2.charge * (p1.pos - p2.pos) / ((p1.pos - p2.pos).magnitude() ** 3) # Vector Coulumb's Law            p1.force += f12            p2.force -= f12 # Newton's Third Law f21 = -f12        for p in particles: p.draw_and_update(delta_t)        screen.blit(font.render(message, True, (20, 255, 20), (20, 20, 100)), (0, 0))        screen.blit(font.render("Paused" if paused else "Unpaused", True, (20, 255,20), (20, 20, 100)), (0, 30))        screen.blit(font.render("k = " + str(k), True, (20, 255,20), (20, 20, 100)), (0, 60))        pygame.display.flip()        for event in pygame.event.get():            if event.type == pygame.QUIT:                return            elif event.type == pygame.MOUSEBUTTONDOWN:                dragging = True                lastMouseDown = time.time()            elif event.type == pygame.MOUSEBUTTONUP:                dragging = False                if lastMouseDown is not None and time.time() - lastMouseDown < 0.5: # Short mouse hold                    charge = 1 if event.button == 1 else -1 # Left Click                    sx, sy = pygame.mouse.get_pos()                    x, y = anti_coord_sys(sx, sy)                    particles.append(Particle(x, y, 0, 0, charge, 1))                    particles_couple = list(itertools.combinations(particles, 2))                    save_world()            elif event.type == pygame.MOUSEMOTION and dragging:                viewport_x += event.rel[0]                viewport_y += event.rel[1]            elif event.type == pygame.KEYDOWN:                if event.key == pygame.K_SPACE:                    paused = not paused                elif event.key == pygame.K_k:                    message = "Type to set value of K and press enter."                elif event.key == pygame.K_s:                    save_world()                    message = "World Saved Successfully"                elif event.key == pygame.K_d:                    particles.clear()                    particles_couple.clear()                elif event.key == pygame.K_RETURN:                    try:                        k = float(typed)                        message = "Value of K set to " + typed                    except ValueError:                        message = "Value of K cannot be set to " + typed                    typed = ""                elif event.key == pygame.K_BACKSPACE: typed = typed[:-1]                elif event.unicode.isprintable(): typed += event.unicode        delta_t = clock.tick(60) / 1000 # delta_t in seconds        delta_t = 0 if paused else delta_t # set delta_t to 0 if pauseduser_choice = main_menu()if user_choice == "create":    world_name = create_world_screen()    if world_name:        save_world()        simulation()elif user_choice.startswith("load="):    world_name = user_choice[5:]    load_world()    simulation()pygame.quit()
+</code></pre>
+</div>
+
+<!-- Prism.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+<script>
+    function copyCode() {
+        const code = document.getElementById("python-code").innerText;
+        navigator.clipboard.writeText(code).then(() => {
+            alert("Code copied!");
+        });
+    }
+
+    // Example of dynamically inserting code later:
+    // document.getElementById("python-code").textContent = "print('Hello, world!')";
+    // Prism.highlightAll();
+</script>
+
+</body>
+</html>
